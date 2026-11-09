@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>Buku Hutang Pribadi</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d2e;--panel2:#18263a;--line:#28384e;--text:#edf4ff;--muted:#9aabc2;--accent:#67e8c1;--red:#ff8e8e;--yellow:#ffd479}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#101c30,#09111e 55%);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}.wrap{max-width:980px;margin:auto;padding:22px 16px 48px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:var(--accent);color:#092019;display:grid;place-items:center;font-size:23px;font-weight:900}.eyebrow{color:var(--accent);font-size:11px;letter-spacing:2px;font-weight:800}.brand h1{font-size:23px;margin:1px 0}.sub{color:var(--muted);font-size:13px}.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:750;background:var(--accent);color:#082019;cursor:pointer}.btn.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.btn.danger{background:#3a2028;color:#ffb5b5;border:1px solid #63313d}.btn:disabled{opacity:.5;cursor:not-allowed}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}.stat,.panel{background:rgba(18,29,46,.94);border:1px solid var(--line);border-radius:18px;padding:17px}.stat span{color:var(--muted);font-size:12px}.stat strong{display:block;font-size:clamp(17px,3vw,24px);margin-top:8px;overflow-wrap:anywhere}.stat:nth-child(2) strong{color:var(--yellow)}.stat:nth-child(3) strong{color:var(--accent)}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0}.search{flex:1;min-width:170px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--text);outline:none}.filter{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px;color:var(--text)}.list{display:grid;gap:11px}.debt{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px;display:grid;grid-template-columns:1fr auto;gap:12px}.person{font-weight:800;font-size:17px}.meta{color:var(--muted);font-size:12px;margin-top:4px}.amount{font-size:18px;font-weight:850;color:var(--yellow);text-align:right}.pill{display:inline-block;font-size:11px;padding:4px 8px;border-radius:30px;margin-top:8px;background:#25354b;color:#b9c9df}.pill.paid{background:#143b34;color:var(--accent)}.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.small{font-size:12px;padding:8px 10px;border-radius:9px}.empty{text-align:center;color:var(--muted);padding:38px 15px;border:1px dashed var(--line);border-radius:16px}.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:12px;color:var(--muted)}.field input,.field textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0b1524;color:var(--text);font:inherit}.field textarea{min-height:70px;resize:vertical}.auth{max-width:440px;margin:7vh auto;padding:24px;background:var(--panel);border:1px solid var(--line);border-radius:20px}.auth h2{margin:0 0 8px}.muted{color:var(--muted);font-size:13px;line-height:1.5}.hidden{display:none!important}.msg{padding:11px;border-radius:10px;background:#3a2028;color:#ffd0d0;font-size:13px;margin:12px 0}.ok{background:#143b34;color:#b9ffe9}.foot,.note{margin-top:22px;text-align:center;color:#71839c;font-size:11px;line-height:1.5}dialog{width:min(92vw,480px);border:1px solid var(--line);border-radius:18px;background:#121d2e;color:var(--text);padding:20px}dialog::backdrop{background:#030914bb}dialog h2{margin:0 0 16px}.modal-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:18px}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:span 2}.top{align-items:flex-start}.top .btn{padding:10px}.debt{grid-template-columns:1fr}.amount{text-align:left}.toolbar .btn{flex:1}}
+</style>
+</head>
+<body>
+<section id="authScreen" class="auth">
+  <div class="brand"><div class="logo">₿</div><div><div class="eyebrow">CATATAN KEUANGAN</div><h1>Buku Hutang Pribadi</h1></div></div>
+  <h2 style="margin-top:24px">Masuk ke akunmu</h2>
+  <p class="muted">Gunakan email dan password yang sudah kamu buat di Supabase Authentication.</p>
+  <form id="loginForm">
+    <div class="field"><label for="email">Email</label><input id="email" type="email" required autocomplete="username" placeholder="nama@email.com"></div>
+    <div class="field"><label for="password">Password</label><input id="password" type="password" required autocomplete="current-password" placeholder="Password akunmu"></div>
+    <button class="btn" id="loginBtn" type="submit" style="width:100%">Masuk</button>
+  </form>
+  <div id="authMsg" class="msg hidden"></div>
+  <p class="muted">Jika email belum dikonfirmasi, buka email dari Supabase dan tekan tautan konfirmasi terlebih dahulu.</p>
+</section>
+
+<div id="appScreen" class="wrap hidden">
+  <header class="top">
+    <div class="brand"><div class="logo">₿</div><div><div class="eyebrow">CATATAN KEUANGAN</div><h1>Buku Hutang</h1><div class="sub" id="userEmail"></div></div></div>
+    <button class="btn secondary" id="logoutBtn">Keluar</button>
+  </header>
+  <section class="stats">
+    <div class="stat"><span>Total Hutang</span><strong id="total">Rp0</strong></div>
+    <div class="stat"><span>Sisa Belum Dibayar</span><strong id="remaining">Rp0</strong></div>
+    <div class="stat"><span>Sudah Dibayar</span><strong id="paid">Rp0</strong></div>
+  </section>
+  <div class="toolbar">
+    <input class="search" id="search" placeholder="Cari nama atau catatan..." aria-label="Cari hutang">
+    <select class="filter" id="filter"><option value="all">Semua</option><option value="unpaid">Belum lunas</option><option value="paid">Lunas</option></select>
+    <button class="btn secondary" id="exportBtn">Ekspor CSV</button><button class="btn" id="addBtn">＋ Tambah</button>
+  </div>
+  <div id="statusMsg" class="muted" role="status">Mengambil data dari cloud...</div>
+  <main id="list" class="list"></main>
+  <div class="note">Data tersimpan di database online Supabase dan hanya bisa diakses oleh akun yang berhak. Tetap lakukan backup berkala.</div>
+  <div class="foot">BUKU HUTANG • PENYIMPANAN ONLINE PRIBADI</div>
+</div>
+
+<dialog id="debtDialog">
+  <form id="debtForm">
+    <h2 id="formTitle">Tambah Hutang</h2><input type="hidden" id="debtId">
+    <div class="field"><label for="name">Nama orang</label><input id="name" required maxlength="70" placeholder="Contoh: Budi"></div>
+    <div class="field"><label for="amount">Jumlah hutang (Rp)</label><input id="amount" type="number" required min="1" step="1" inputmode="numeric"></div>
+    <div class="field"><label for="date">Tanggal</label><input id="date" type="date" required></div>
+    <div class="field"><label for="note">Catatan (opsional)</label><textarea id="note" maxlength="250"></textarea></div>
+    <div class="modal-actions"><button type="button" class="btn secondary" id="cancelBtn">Batal</button><button class="btn" type="submit">Simpan</button></div>
+  </form>
+</dialog>
+<dialog id="payDialog">
+  <form id="payForm"><h2>Catat Pembayaran</h2><input type="hidden" id="payId">
+    <div class="field"><label>Jumlah pembayaran (Rp)</label><input id="payAmount" type="number" min="1" step="1" required inputmode="numeric"></div>
+    <div class="modal-actions"><button type="button" class="btn secondary" id="payCancel">Batal</button><button class="btn" type="submit">Catat</button></div>
+  </form>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://uryirslruezxzcajbmjq.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_dkmSrnBm6bCGj7BmWTOu4A_QQD7fqjQ";
+const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+let debts = [];
+const $ = id => document.getElementById(id);
+const rupiah = n => new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
+const remaining = d => Math.max(0,Number(d.amount)-Number(d.paid||0));
+function showAuth(message=''){ $('authScreen').classList.remove('hidden');$('appScreen').classList.add('hidden');$('authMsg').textContent=message;$('authMsg').classList.toggle('hidden',!message); }
+function showApp(user){$('authScreen').classList.add('hidden');$('appScreen').classList.remove('hidden');$('userEmail').textContent=user.email||'Akun pribadi';loadDebts();}
+function setStatus(message,isError=false){$('statusMsg').textContent=message;$('statusMsg').style.color=isError?'#ffaaaa':'#9aabc2';}
+async function loadDebts(){
+ setStatus('Mengambil data dari cloud...');
+ const {data,error}=await client.from('debts').select('*').order('debt_date',{ascending:false});
+ if(error){setStatus('Gagal mengambil data: '+error.message+'. Pastikan tabel debts dan RLS sudah dibuat.',true);return;}
+ debts=data||[];render();setStatus(debts.length+' catatan dimuat dari cloud.');
+}
+function render(){
+ $('total').textContent=rupiah(debts.reduce((s,d)=>s+Number(d.amount),0));
+ $('remaining').textContent=rupiah(debts.reduce((s,d)=>s+remaining(d),0));
+ $('paid').textContent=rupiah(debts.reduce((s,d)=>s+Number(d.paid||0),0));
+ const q=$('search').value.toLowerCase(),f=$('filter').value;
+ const shown=debts.filter(d=>(d.name+' '+(d.note||'')).toLowerCase().includes(q)&&(f==='all'||(f==='paid'?remaining(d)===0:remaining(d)>0)));
+ $('list').innerHTML='';
+ if(!shown.length){$('list').innerHTML='<div class="empty">Belum ada data yang cocok.<br>Tekan <b>＋ Tambah</b> untuk mencatat hutang.</div>';return;}
+ shown.forEach(d=>{
+  const el=document.createElement('article');el.className='debt';const left=document.createElement('div'),right=document.createElement('div');
+  const name=document.createElement('div');name.className='person';name.textContent=d.name;
+  const meta=document.createElement('div');meta.className='meta';meta.textContent=new Date(d.debt_date+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})+(d.note?' • '+d.note:'');
+  const pill=document.createElement('span');pill.className='pill'+(remaining(d)===0?' paid':'');pill.textContent=remaining(d)===0?'Lunas':'Belum lunas';left.append(name,meta,pill);
+  const amount=document.createElement('div');amount.className='amount';amount.textContent=rupiah(remaining(d));
+  const small=document.createElement('div');small.className='meta';small.textContent='dari '+rupiah(d.amount)+' • dibayar '+rupiah(d.paid||0);right.append(amount,small);
+  const actions=document.createElement('div');actions.className='actions';
+  const make=(label,fn,cls='btn secondary small')=>{const b=document.createElement('button');b.className=cls;b.textContent=label;b.onclick=fn;return b;};
+  if(remaining(d)>0)actions.append(make('＋ Bayar',()=>openPay(d.id),'btn small'));
+  actions.append(make('Edit',()=>editDebt(d.id)),make('Hapus',()=>removeDebt(d.id),'btn danger small'));right.append(actions);el.append(left,right);$('list').append(el);
+ });
+}
+function openDebt(){$('debtForm').reset();$('debtId').value='';$('formTitle').textContent='Tambah Hutang';$('date').value=new Date().toISOString().slice(0,10);$('debtDialog').showModal();}
+function editDebt(id){const d=debts.find(x=>x.id===id);if(!d)return;$('debtId').value=d.id;$('name').value=d.name;$('amount').value=d.amount;$('date').value=d.debt_date;$('note').value=d.note||'';$('formTitle').textContent='Edit Hutang';$('debtDialog').showModal();}
+async function removeDebt(id){const d=debts.find(x=>x.id===id);if(!d||!confirm('Hapus catatan hutang '+d.name+'?'))return;const {error}=await client.from('debts').delete().eq('id',id);if(error){alert('Gagal menghapus: '+error.message);return;}await loadDebts();}
+function openPay(id){const d=debts.find(x=>x.id===id);if(!d)return;$('payId').value=id;$('payAmount').value='';$('payAmount').max=remaining(d);$('payDialog').showModal();}
+$('loginForm').onsubmit=async e=>{e.preventDefault();$('loginBtn').disabled=true;$('loginBtn').textContent='Memproses...';const {data,error}=await client.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});$('loginBtn').disabled=false;$('loginBtn').textContent='Masuk';if(error){showAuth(error.message);return;}showApp(data.user);};
+$('logoutBtn').onclick=async()=>{await client.auth.signOut();debts=[];showAuth();};
+$('addBtn').onclick=openDebt;$('cancelBtn').onclick=()=>$('debtDialog').close();$('payCancel').onclick=()=>$('payDialog').close();
+$('debtForm').onsubmit=async e=>{e.preventDefault();const id=$('debtId').value,old=debts.find(x=>x.id===id),amount=Number($('amount').value);if(old&&amount<Number(old.paid||0)){alert('Jumlah hutang tidak boleh lebih kecil dari pembayaran yang sudah dicatat.');return;}
+ const item={name:$('name').value.trim(),amount,debt_date:$('date').value,note:$('note').value.trim()};
+ let result;
+ if(old){
+  result=await client.from('debts').update(item).eq('id',id);
+ }else{
+  const {data:{user},error:userError}=await client.auth.getUser();
+  if(userError||!user){alert('Sesi login tidak ditemukan. Silakan login kembali.');return;}
+  result=await client.from('debts').insert({...item,user_id:user.id,paid:0});
+ }
+ if(result.error){alert('Gagal menyimpan: '+result.error.message);return;}$('debtDialog').close();await loadDebts();};
+$('payForm').onsubmit=async e=>{e.preventDefault();const d=debts.find(x=>x.id===$('payId').value),v=Number($('payAmount').value);if(!d||v<=0||v>remaining(d)){alert('Nominal pembayaran tidak valid atau melebihi sisa hutang.');return;}
+ const {error}=await client.from('debts').update({paid:Number(d.paid||0)+v}).eq('id',d.id);if(error){alert('Gagal mencatat pembayaran: '+error.message);return;}$('payDialog').close();await loadDebts();};
+$('search').oninput=render;$('filter').onchange=render;
+$('exportBtn').onclick=()=>{const rows=[['Nama','Tanggal','Jumlah Hutang','Sudah Dibayar','Sisa','Catatan'],...debts.map(d=>[d.name,d.debt_date,d.amount,d.paid||0,remaining(d),d.note||''])];const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\\n');const blob=new Blob(['\\ufeff'+csv],{type:'text/csv;charset=utf-8'});const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='buku-hutang.csv';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);};
+client.auth.getSession().then(({data})=>{if(data.session)showApp(data.session.user);else showAuth();});
+client.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT')showAuth();});
+</script>
+</body></html>
